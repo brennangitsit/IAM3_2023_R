@@ -1,6 +1,5 @@
-# A Beginner's Guide to R:
-## Reproducible Data Analysis Using R and the Tidyverse
-### June 12-17 at [IAM3 2023](), Stockholm, Sweden
+# A Beginner's Guide to R: <br>Reproducible Data Analysis Using R and the Tidyverse
+### June 12-17 at [IAM3 2023](), Stockholm, Sweden <br>Instructors: Brennan Terhune-Cotter and Dr. Matt Dye
 
 ## Welcome to the IAM3 2023 R Workshop!
 
@@ -21,8 +20,6 @@ You will have received an email with a link to the workshop's workspace on Posit
 ## Workshop Learning Goals
 **LEARNING GOALS GO HERE**
 
-
-## Instructors: Brennan Terhune-Cotter and Dr. Matt Dye
 
 ## Acknowledgements
 Dr. Adam Stone presented [an R workshop](https://github.com/foundinblank/2019-ntid-data-workshop) in March 2019 which Matt and Brennan attended. Dr. Stone gave us permission to reuse the materials from this workshop, which comprise much of the content in Days 1 and 4 of this workshop. We are grateful to him for getting us started on this journey and being willing to share his materials!
