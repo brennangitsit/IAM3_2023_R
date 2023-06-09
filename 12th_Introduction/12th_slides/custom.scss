@@ -1,0 +1,19 @@
+/*-- scss:defaults --*/
+/* Copy and paste the headliner SCSS defaults */
+$presentation-font-size-root: 30px;
+$presentation-font-smaller: 0.8;
+//$body-bg: #191919;
+$presentation-heading-color: #6e8a1c;
+$body-color: hsl(0, 0%, 13%);
+$link-color: #2b7fcd;
+
+/* Override the defaults from headliner.scss */
+$presentation-heading-color: #5cb331;  // your new color here
+
+/*-- scss:rules --*/
+.reveal .slide blockquote {           // for blockquotes (forgot why I added this...)
+  border-left: 3px solid $text-muted; // left border style
+  padding-left: 0.5em;                // left border padding
+}
+
+/* see https://quarto.org/docs/presentations/revealjs/themes.html#sass-variables */

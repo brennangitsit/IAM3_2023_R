@@ -1,0 +1,270 @@
+---
+title: 'Lab: RStudio Setup and Data Import'
+author: "Brennan & Matt"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# R Markdown Files ----------------
+
+This is an R Markdown document, which is used to create documents with executable code.
+
+See <http://rmarkdown.rstudio.com> for details on R Markdown.
+
+This is a code chunk, in **gray**. You can run the code in this chunk by pressing the green Play button on the right.
+
+Every R Markdown document has a `setup` chunk in the beginning. The `include = FALSE` parameter tells it not to include this chunk in the final document.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Make RStudio Yours! ----------------
+
+Unfortunately there are no themes for Posit Cloud, only R Studio Desktop.
+
+If you want to personalize the desktop version, read on!
+
+Personalize it to your heart's delight:
+ 1. Tools Menu > Global Options > Appearance...
+ 2. Change your Editor Theme and/or font size. There's some cool color themes in there!
+ 3. Apply & Save. 
+
+# How to Run Code ----------------
+
+Here, you will start running lines of code. 
+There are a few ways you can run a line of code in an R script
+Running a line of code = telling the computer to execute that line.
+
+*1. Highlight the line of code, and press Cmd-Enter (Mac) or Ctrl-Enter (Windows)
+*2. Put the cursor anywhere in the line of code, and press Cmd-Enter (Mac) or Ctrl-Enter (Windows)
+ 3. Type the code into the Console (the box below), next to the ">" then press Enter. 
+
+* You can also use the "Run" button in this pane's upper-right corner instead of pressing Cmd/Ctrl-Enter
+
+In R Markdown files, like this one, there is another way to run code:
+ 4. Press the green play button on the right to run all code within a chunk.
+
+# Install the Tidyverse ----------------
+
+Run this line of code. It will install a lot of stuff onto the machine.
+You only have to do this once, ever, on any machine you're on.
+
+RStudio is helpful - it will scan code and show a warning message if it sees any libraries that aren't installed yet. For now, press "Don't Show Again."
+But if you already clicked "install," run this code anyway. 
+
+Note that I included `eval = FALSE` as a parameter in this code chunk.
+This is because I *do not* want this code to be run ("evaluated") when the document is created ("knitted") at the end.
+However, you can still run this code manually.
+
+```{r tidyverse, eval=FALSE}
+install.packages("tidyverse")
+```
+
+Lots of things will happen in the Console below. You will see an output, "Attaching Packages" with 8 green checkmarks and then "Conflicts" with two red X's. That's normal! That means everything in the tidyverse installed correctly, and you are ready to launch.
+When you see `>` that means it's finished and now it's waiting for you to do something. 
+
+
+
+# Load the Tidyverse ----------------
+
+Run this line of code. It loads the core Tidyverse packages.
+
+library() is like checking out cookbook from the library, bringing it home, and saying, "Okay, now I'm ready to start using recipes in this book!"
+
+You need to load packages each time you open R or change R projects. Ignore the conflicts for filter() and lag(), that's normal.
+
+Check out the tidyverse cookbook from the library and bring it home to cook with!
+
+```{r}
+library(tidyverse)
+```
+
+
+
+# Make Sure Tidyverse Is Loaded ----------------
+
+Tidyverse comes with some datasets. To make sure Tidyverse was loaded correctly, let's try looking at a dataset. 
+
+```{r}
+starwars
+```
+
+
+You should see a print-out in the Console with the first 10 rows of Star Wars character data. Fun! 
+
+Want to see it in its own tab in the Source window?
+
+```{r}
+View(starwars)
+```
+
+`View(dataset)` is an example of a command I usually type in the Console, because it is a one-time request I want to make.
+
+In the `starwars` tab, try clicking on different column names to sort the table. 
+
+Press the Filter button and try filtering various columns.
+
+Some columns can't be filtered, like films, vehicles, and starships. 
+
+Try dragging the "starwars" pane out of the entire browser to turn it into a separate window. 
+
+
+
+# Assigning Variables ----------------
+
+Let's practice how to assign variables in the environment
+Run this line.
+
+```{r}
+x <- 5
+```
+
+
+Look at the Environment tab on the right. It should show "x" and "5". 
+That means you've saved a variable, x, that contains the value, 5. 
+
+Try running x by itself. What does the console say? 
+
+```{r}
+x
+```
+
+
+Yep, it just shows you what's the value of x. Let's change that to 10. What happens? 
+
+```{r}
+x <- 10
+x
+```
+
+Let's assign a new variable, y. 
+Maybe this time, try typing it out on the console and pressing Enter.
+
+```{r}
+y <- 20
+y
+```
+
+Add x and y. 
+
+```{r}
+x + y
+```
+
+
+Assign x + y to a new variable.
+
+```{r}
+z <- x + y
+z
+```
+
+
+Let's assign starwars to a variable too.
+
+```{r}
+starwars_data <- starwars
+```
+
+
+In the Environment pane...
+- What do you see? How many observations (rows)? 
+- How many variables (columns)? 
+- What happens when you click on the blue arrow? 
+- What happens when you click on the name "starwars_data" itself? 
+
+
+
+# Getting Help ----------------
+
+You can look up any function by running `?name_of_function_goes_here`
+Let's try View. (Remember it?)
+
+```{r}
+?View
+```
+
+
+What do you think read_xlsx does? 
+
+```{r}
+?read_xlsx
+```
+
+
+
+# Import Your Data ----------------
+Let's try importing your data! I will import `got_mortality_data.csv`.
+
+This is a dataset containing data about every character in *Game of Thrones* and if/how they die!
+You can also import this data or try importing your own data.
+
+Copy and paste your data file into the `IAM3_R/scripts` folder. 
+Or if you want, you can try to make R read your file in its original location! 
+
+First, we need to load the package with the function we need.
+There are base R functions for importing data. However, like with many base R functions, there are packages that have better functions for doing it.
+
+If you are importing an **Excel** file, you want to install and load **readxl**.
+If you are importing a **csv** or **txt** file, you want to install and load **readr**.
+
+My file is a .csv file, so I will be using **readr::read_csv**. Edit the code chunk below for:
+  - the right package name
+  - the right function name
+  - the right filename (and filepath, if needed) - must be in "quotes"
+  
+Before running this code, install the package first using `install.packages("packagename")` in the console.
+
+```{r import_data}
+library(readr)
+my_data <- read_csv("../../data/got_mortality_data.csv")
+```
+
+You should now see an object in the Environment called my_data.
+
+The GOT dataset has clean variable names already, but if you want to clean the variable names in your dataset, run the following code.
+This uses the function `clean_names` in the package `janitor`. Install the `janitor` package first!
+
+Note that if you include the package name in the function (`janitor::clean_names()`), you do *not* need to load the package.
+This is useful if you only need to use one function from the package.
+
+```{r clean_names}
+my_data <- janitor::clean_names(my_data)
+```
+
+
+
+# That’s It! ----------------
+
+We'll do more fun stuff during the workshop.
+
+You can look at the Files pane to see all the other files we're working with here. 
+
+You can also look in the data/ folder to see all the datasets we may be working with. 
+Many of them have been cleaned up for this workshop. 
+You can see how we did that in scripts/data_cleaning.R. 
+
+For the OYOLab, try doing the following things:
+
+  1. Create a folder (or folders) where you will put your R scripts.
+
+  2. Create an .Rproj in the folder.
+
+  3. Open a new R Script file while in the .Rproj. (Remember, an R script looks different from this R Markdown file)
+
+  4. Copy and paste the code in the chunks above for importing your data from 12_1_begin.Rmd and try running it.
+
+  5. Don't forget to fix the filepath and/or move your data file to the right place!
+
+  6. Save your R script.
+
+You now have your first (or second, third, or hundredth) R script!
+
+
+
+# Viewing the Final Document ----------------
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+Try pressing **Knit** on the top of the Source window. If there are no errors, you will see a .html document pop up!

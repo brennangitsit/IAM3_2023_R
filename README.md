@@ -12,6 +12,16 @@ However, in the data analysis stage of a science project, preparing the data tak
 We're using [Posit Cloud](https://posit.cloud/) - a cloud-based version of RStudio that runs entirely within your browser. It's like Google Docs, but for R! No installation needed. :sunglasses:
 You will have received an email with a link to the workshop's workspace on Posit Cloud. If you don't have the link, please [email](mailto:mwddls@rit.edu) or ask Matt. Materials for each day will be added on a rolling basis. 
 
+**To set up your Posit Cloud workspace:**
+1. Click the link in the Posit Cloud invite.
+2. Set up your Posit Cloud account. 
+3. Log in. Look at the "Spaces" on the left. Click on "IAM3 2023 R Workshop", if you're not there already
+4. When in the workshop workspace, click on **New Project > New RStudio Project**.
+5. Name your project at the top. This will be your playground for the workshop!
+6. Throughout the workshop, we will ask you to download lab files from the IAM3 2023 R project and upload them to your own project. Here's how you do this:
+    1. [download](img/download)
+    2. [upload](img/upload)
+
 
 ## Workshop Schedule
 **SCHEDULE GOES HERE**

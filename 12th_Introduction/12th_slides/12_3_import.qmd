@@ -1,0 +1,295 @@
+---
+title: "Day 1, Part 3: Import Your Data"
+authors: Brennan Terhune-Cotter and Matt Dye
+format: 
+  revealjs:
+      incremental: true
+    smaller: false
+    theme: [simple, custom.scss]
+    footer: "[https://github.com/brennangitsit/2023_IAM3_R](https://github.com/brennangitsit/2023_IAM3_R)"
+editor: visual
+global_packages:
+  - dplyr
+  - tidyverse
+execute:
+  echo: true
+---
+
+## Agenda
+
+1.  Importing Data
+2.  Finding your files for import
+3.  Local paths
+
+# Importing Data
+
+## Importing data using `readr` or `readxl`
+
+-   Importing data from Excel spreadsheets is easy with `read_xlsx()` in the package `readxl::`
+
+-   Importing data from csv or text files are easy with `read_…` functions in `readr::`
+
+    -   Depends on what the delimiter is:
+
+        |              |                            |                    |
+        |--------------|----------------------------|--------------------|
+        | **function** | **delimiter**              | **typical suffix** |
+        | `read_table` | white space                | .txt               |
+        | `read_csv`   | comma                      | .csv               |
+        | `read_csv2`  | semicolon                  | .csv               |
+        | `read_tsv`   | tab                        | .tsv               |
+        | `read_delim` | any; must define delimiter | .txt               |
+
+## Cleaning Variable Names
+
+-   `janitor::clean_names` will automatically "clean" the names of a dataset to make them more usable:
+
+```{r echo=T}
+eruptions <- readxl::read_xlsx("../../data/holocene_eruptions.xlsx")
+names(eruptions)
+
+eruptions <- janitor::clean_names(eruptions)
+names(eruptions)
+```
+
+## Cleaning Variable Names
+
+-   Usually, you will want to rename variables even if they've been cleaned with `janitor::`.
+
+-   You do this with the function `rename()` in the `dplyr` package:
+
+```{r eval=F}
+new_df <- rename(old_df,
+                 new_name1 = old_name1,
+                 new_name2 = old_name2,
+                 new_name3 = old_name3)
+```
+
+# Finding your files!
+
+::: callout-caution
+Importing files into your R workspace for the first time can be difficult because you have to **know the current file paths to the files you want!**
+:::
+
+## The filepaths behind your Finder window
+
+::: columns
+::: {.column width="40%"}
+![](images/Screenshot%202023-06-05%20at%202.58.45%20PM-01.png){fig-align="center"}
+:::
+
+::: {.column width="60%" style="font-size: .7em"}
+/Desktop/LLCN_local
+
+/Desktop/LLCN_local/ASL_CT
+
+/Desktop/LLCN_local/DTI_Workshop
+
+/Desktop/LLCN_local/fMRI
+
+/Desktop/LLCN_local/fMRI/AFNI
+
+/Desktop/LLCN_local/LOC Timing Files
+
+/Desktop/LLCN_local/LOC Timing Files/baseline.1D
+
+/Desktop/LLCN_local/LOC Timing Files/narrative.1D
+
+/Desktop/LLCN_local/LOC Timing Files/sentence.1D
+
+/Desktop/LLCN_local/PsychoPyScript_LOC_CURRENT
+
+/Desktop/LLCN_local/ASL_SRT.dmg
+
+/Desktop/LLCN_local/LLCN_lab_meeting_zoom_link.rtf
+
+/Desktop/LLCN_local/LLCN_lang-bkgd-forms_links-instructions.rtf
+:::
+:::
+
+## Finding the absolute file path of a file
+
+There are shortcuts to finding the absolute file path of a file and copying it!
+
+::: columns
+::: {.column width="40%"}
+![in Finder, select file & right-click on its name in the bottom of the window](images/Screenshot%202023-06-05%20at%203.10.10%20PM.png)
+:::
+
+::: {.column width="20%"}
+:::
+
+::: {.column width="40%"}
+[![in Explorer, right-click path and "copy as path"](images/Screenshot%202023-06-05%20at%203.11.59%20PM.png)](https://superuser.com/questions/1489874/how-to-get-the-real-path-of-desktop-in-windows-explorer)
+:::
+:::
+
+## Mac vs. PC
+
+::: callout-caution
+## Macs and PCs format file paths differently.
+
+Macs use slashes: `/`
+
+PCs use backslashes: `\`
+
+I will be using Mac convention as I have a Mac :)
+
+PC users, please remember to use backslashes instead of slashes!
+:::
+
+# R Projects and Local Paths
+
+## R Projects
+
+-   An R project is a file which saves your **workspace**
+
+-   It is useful to have an .Rproj file for each project you have
+
+-   When you open the .Rproj, everything will look like the last time you saved it.
+
+-   Instead of opening RStudio or individual R files (like any other application):
+
+    1.  Open your .Rproj
+
+    2.  Open files from that .Rproj
+
+![](images/Screenshot%202023-06-05%20at%207.12.12%20PM.png){fig-align="center"}
+
+## Using local paths to stay within a folder
+
+-   All project-specific code should be written to work within the project's folder *no matter where the folder is*
+
+-   This means using local paths to load data and refer to other files within the folder
+
+    -   No slash in the beginning = local path (starts from working directory)
+
+    -   Slash in beginning = absolute path (starts from home directory)
+
+    -   `./` = current directory
+
+    -   `../` = go one directory "up"
+
+-   That project file (or analysis file that your scripts are in) will be your *working directory*
+
+```{r}
+localFilePath = "scripts/data_cleaning.R"
+absoluteFilePath = "/Users/brennanwork/Library/CloudStorage/GoogleDrive-bterhunecotter@sdsu.edu/My Drive/IAM3_R/scripts/data_cleaning.R"
+```
+
+## Working Directories
+
+-   Your *working directory* is where you run your scripts "from".
+
+-   You can temporarily change your working directory with `setwd()`
+
+```{r warning=F}
+getwd() # check your current working directory
+setwd("../") # change your working directory ("." refers to current directory)
+getwd() # check it again
+```
+
+## Which folder is my working directory?
+
+-   The answer depends on how you run your code and how you opened the session:
+
+    -   If you run your code [directly]{.underline}, and...
+
+        -   if you opened an .Rproj, then **it is that .Rproj's folder**
+
+        -   if you opened a new session of R or opened a .R file directly, then **it is your home folder** :(
+
+    -   If you run the code in a script by using [`source()`]{.underline}, then **it is that script's folder**
+
+::: {.callout-tip appearance="minimal"}
+If you are just starting out with R, just save your .Rproj and all .R scripts to one folder. That folder will always be your working directory if you open R via your .Rproj :)
+
+Don't worry about using `source()` at this point!
+:::
+
+## Writing Local Paths
+
+::: columns
+::: {.column width="50%"}
+-   project_folder
+    -   data
+
+        -   data.xlsx
+
+    -   analysis
+
+        -   project_analysis.R
+
+        -   project.Rproj
+
+In the script `project_analysis.R`, opened in `project.Rproj`, how would you open `data.xlsx`?
+:::
+
+::: {.column width="50%"}
+::: fragment
+```{r eval=FALSE}
+open_xlsx("../data/data.xlsx")
+```
+
+The working directory would be `project_folder/analysis`, so you would go *up* one folder then back down into the data folder.
+:::
+:::
+:::
+
+## Writing Local Paths
+
+::: columns
+::: {.column width="50%"}
+-   project_folder
+    -   project.Rproj
+
+    -   data
+
+        -   data.xlsx
+
+    -   analysis
+
+        -   project_analysis.R
+
+In the script `project_analysis.R`, opened in `project.Rproj`, how would you open `data.xlsx`?
+:::
+
+::: {.column width="50%"}
+::: fragment
+```{r eval=FALSE}
+# if you run code directly
+open_xlsx("./data/data.xlsx") # OR
+open_xlsx("data/data.xlsx")
+
+# if you run the script in a source() call
+open_xlsx("../data/data.xlsx")
+```
+
+The working directory would be in the same folder as project.Rproj when running code within the project.
+
+If you source the script, the working directory would be in the `analysis folder`.
+:::
+:::
+:::
+
+# Next up... Lab 1 and OYOLab! {.smaller}
+
+[**In Lab 1:**]{.underline}
+
+1.  Follow the instructions in 12_1\_begin.Rmd!
+
+[**In OYOLab:**]{.underline}
+
+1.  Create a folder (or folders) where you will put your R scripts.
+
+2.  Create an .Rproj for each folder.
+
+3.  Open a new R Script file.
+
+4.  Copy and paste the code for importing your data from 12_1\_begin.Rmd and try running it.
+
+    -   Don't forget to fix the filepath and/or move the file with your data to the right place!
+
+5.  Save your R script.
+
+6.  You now have your first (or second, third, or hundredth) R script!
