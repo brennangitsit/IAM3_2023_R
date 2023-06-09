@@ -19,8 +19,8 @@ You will have received an email with a link to the workshop's workspace on Posit
 4. When in the workshop workspace, click on **New Project > New RStudio Project**.
 5. Name your project at the top. This will be your playground for the workshop!
 6. Throughout the workshop, we will ask you to download lab files from the IAM3 2023 R project and upload them to your own project. Here's how you do this:
-    1. [download](img/download)
-    2. [upload](img/upload)
+    1. [download](img/download.png)
+    2. [upload](img/upload.png)
 
 
 ## Workshop Schedule
