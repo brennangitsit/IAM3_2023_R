@@ -1,2 +1,32 @@
-# IAM3_2023_R
- Materials for the R workshop at IAM3 2023
+# A Beginner's Guide to R:
+## Reproducible Data Analysis Using R and the Tidyverse
+### June 12-17 at [IAM3 2023](), Stockholm, Sweden
+
+## Welcome to the IAM3 2023 R Workshop!
+
+## Objective
+Scientists are increasingly required to make their data preparation, analysis, and statistics **reproducible**. :point_up: Reproducible resarch means anyone should be able to take your dataset and, using your analysis plan, arrive at exactly the same results as you did. That's good science! :raised_hands:
+
+However, in the data analysis stage of a science project, preparing the data takes up 90% of the time. :scream: In this workshop, you will learn about how to do *reproducible* data preparation and analysis using [Rstudio](http://www.rstudio.com) and [the tidyverse](http://www.tidyverse.org). With these tools, you'll do better science :sunglasses:, save a lot of time :grin:, reduce errors :sweat_smile:, and even make some pretty graphs. :heart_eyes:
+
+## Your Workspace
+We're using [Posit Cloud](https://posit.cloud/) - a cloud-based version of RStudio that runs entirely within your browser. It's like Google Docs, but for R! No installation needed. :sunglasses:
+You will have received an email with a link to the workshop's workspace on Posit Cloud. If you don't have the link, please [email](mailto:mwddls@rit.edu) or ask Matt. Materials for each day will be added on a rolling basis. 
+
+
+## Workshop Schedule
+**SCHEDULE GOES HERE**
+
+
+## Workshop Learning Goals
+**LEARNING GOALS GO HERE**
+
+
+## Instructors: Brennan Terhune-Cotter and Dr. Matt Dye
+
+## Acknowledgements
+Dr. Adam Stone presented [an R workshop](https://github.com/foundinblank/2019-ntid-data-workshop) in March 2019 which Matt and Brennan attended. Dr. Stone gave us permission to reuse the materials from this workshop, which comprise much of the content in Days 1 and 4 of this workshop. We are grateful to him for getting us started on this journey and being willing to share his materials!
+
+Hadley Wickham's book, [R for Data Science](https://r4ds.hadley.nz/), has also been an invaluable resource in developing this workshop.
+
+IAM3 is hosted by Stockholm University. Thanks to Krister Schönström and all others who helped make the Institute and this workshop happen!
