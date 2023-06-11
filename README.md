@@ -29,11 +29,11 @@ You will have received an email with a link to the workshop's workspace on Posit
 If you prefer to work on RStudio Desktop, that is fine. Follow steps 1-3 above so you have access to the workshop materials via Posit Cloud. However, if you face issues during the workshop related to your own R install, please try to avoid troubleshooting those issues with the instructors during lab time.
 
 ## Workshop Schedule
-**SCHEDULE GOES HERE**
+![schedule](img/schedule.png)
 
 
 ## Workshop Learning Goals
-**LEARNING GOALS GO HERE**
+![learning_aims](img/learning_aims.png)
 
 
 ## Acknowledgements
