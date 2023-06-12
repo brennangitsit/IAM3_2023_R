@@ -15,9 +15,13 @@ execute:
   echo: true
 ---
 
-# Welcome!
+# Welcome to IAM3!
 
-## Welcome to R!
+::: fragment
+![](images/Screenshot%202023-06-12%20at%2010.52.39%20AM.png){fig-align="center"}
+:::
+
+# Welcome to R!
 
 *R* is a user-friendly, intuitive programming language that allows researchers to efficiently manage, analyze, and visualize data.
 
@@ -35,7 +39,7 @@ The benefits of processing your data via R include:
 
 -   You can easily share your analysis with others by sending them your scripts.
 
--   Your analysis is fully *reproducible* - you have an exact record of what you did with your data from start to finish
+-   Your analysis is fully *reproducible* - you have an exact record of what you did with your data from start to finish. *¶*
 
 ## Reproducibility
 
@@ -43,15 +47,15 @@ The benefits of processing your data via R include:
 
 [^1]: Plesser, H. E. (2017). Reproducibility vs. Replicability: A Brief History of a Confused Terminology. Frontiers in Neuroinformatics, 11, 76.
 
-::: incremental
+<!-- -->
+
 -   **Methods reproducibility:** Same procedures on data can be exactly repeated by the same team
 
 -   **Results reproducibility:** Same results can be obtained from an independent study with the same procedures
 
 -   **Inferential reproducibility:** Same conclusions can be drawn from an independent replication or a reanalysis
 
--   Analysis via R addresses **methods reproducibility** & can help with other forms of reproducibility
-:::
+-   Analysis via R addresses **methods reproducibility** & can help with other forms of reproducibility. *¶*
 
 ## Reproducibility
 
@@ -95,7 +99,7 @@ Using reproducible workflows via R will mitigate/solve:
 
 -   Code lets you analyze data without touching it.
 
--   It follows that we shouldn't be analyzing data using spreadsheets.
+-   It follows that we shouldn't be analyzing data using spreadsheets. *¶*
 
 ## What Not to Do {style="text-align: center"}
 
@@ -154,7 +158,7 @@ However:
 
 -   if you get more data, you will have to manually recode the data again.
 
--   This leads to mistakes, especially if the project spans multiple researchers and/or years!
+-   This leads to mistakes, especially if the project spans multiple researchers and/or years! *¶*
 
 ## Cleaning Up Data via R
 
@@ -187,7 +191,7 @@ knitr::kable(head(cleaner_data))
 
 -   Then you add new files to your project folder, and rerun your code
 
--   The code will find the new data and update everything!
+-   The code will find the new data and update everything! *¶*
 
 ## Cleaning up Data via R
 
@@ -215,7 +219,7 @@ knitr::kable(cleaner_data[7:8,])
 
 -   Well-written and commented code tells you what you did with the data.
 
--   You can always go back and see what the code does if you're not sure what you did.
+-   You can always go back and see what the code does if you're not sure what you did. *¶*
 
 ## 4. Code outlives your research team
 
@@ -223,12 +227,22 @@ knitr::kable(cleaner_data[7:8,])
 
 -   Can you be sure your RAs are doing manual work right every single time? Are they doing it the same way as previous RAs?
 
--   Code automates the manual and repetitive work that humans often make mistakes on.
+-   Code automates the manual and repetitive work that humans often make mistakes on. *¶*
 
 ## 5. Code generates the visualizations you want
 
--   You can use ggplot2 in R to generate a stunning array of visualizations, limited only by your imagination
--   No more wrestling with Excel or Google charts
+::: columns
+::: {.column width="50%"}
+-   You can use ggplot2 in R to generate a stunning array of visualizations, limited only by your imagination! 🤩
+-   No more wrestling with Excel or Google charts 🖐️
+:::
+
+::: {.column width="50%"}
+![](images/plot1.png){fig-align="center" width="367"}
+:::
+:::
+
+![](images/plot2.png){fig-align="center"}
 
 ## 6. R has an amazing community & resources
 
@@ -242,11 +256,23 @@ knitr::kable(cleaner_data[7:8,])
 
 -   Hadley Wickham has a [free and well-written R textbook](https://r4ds.hadley.nz/).
 
+-   These resources will be covered in the last day. *¶*
+
 ## 7. You become a coder!
 
 -   Welcome to the world of computer programming!
 
--   R is a great way to get started via a user-friendly language which can be applied to things you actually use (i.e., data).
+-   R is a great way to get started via a user-friendly language which can be applied to things you actually use (i.e., data). *¶*
+
+::: columns
+::: {.column width="50%"}
+![](images/Screenshot%202023-06-12%20at%2010.25.06%20AM.png){fig-align="center"}
+:::
+
+::: {.column width="50%"}
+![](images/Screenshot%202023-06-12%20at%2010.24.43%20AM-01.png){fig-align="center"}
+:::
+:::
 
 # What to expect...
 
@@ -264,7 +290,9 @@ knitr::kable(cleaner_data[7:8,])
 
         -   practice the concepts we've taught *or*
 
-        -   work on improving your own R skills using your own data, with our help (OYOLabs)
+        -   work on improving your own R skills using your own data, with our help (OYOLabs).
+
+    -   Sometimes we'll split sessions into *review labs* and *"advanced" lectures.* *¶*
 
 ## On Your Own (OYO) Labs
 
@@ -276,7 +304,7 @@ knitr::kable(cleaner_data[7:8,])
 
 -   We encourage you to use the OYOLabs to work on your projects *as they relate to that day*. For example, on Tuesday (data visualization day!) you should try to write or refine scripts which visualize your data.
 
-    -   However, if you wish to work on other aspects of your R project instead, use your time the best way you feel fit
+    -   However, if you wish to work on other aspects of your R project instead, use your time the best way you feel fit! *¶*
 
 ## R Clinic
 
@@ -286,7 +314,7 @@ knitr::kable(cleaner_data[7:8,])
 
 -   Length of appointments will depend on how many people are interested.
 
--   You are encouraged to also come up to us any other time during the Institute (such as lunchtime) if you desire answers, help, or conversation!
+-   You are encouraged to also come up to us any other time during the Institute (such as lunchtime) if you desire answers, help, conversation, or a sympathetic shoulder for gentle weeping! *¶*
 
 ## Workshop schedule (in COURSE OVERVIEW)
 

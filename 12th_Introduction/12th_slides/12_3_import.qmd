@@ -1,12 +1,12 @@
 ---
-title: "Day 1, Part 3: Import Your Data"
+title: "Day 1, Part 3: <br>Import Your Data"
 authors: Brennan Terhune-Cotter and Matt Dye
 format: 
   revealjs:
       incremental: true
-    smaller: false
-    theme: [simple, custom.scss]
-    footer: "[https://github.com/brennangitsit/2023_IAM3_R](https://github.com/brennangitsit/2023_IAM3_R)"
+      smaller: false
+      theme: [simple, custom.scss]
+      footer: "[https://github.com/brennangitsit/2023_IAM3_R](https://github.com/brennangitsit/2023_IAM3_R)"
 editor: visual
 global_packages:
   - dplyr
@@ -19,12 +19,13 @@ execute:
 
 1.  Importing Data
 2.  Finding your files for import
-3.  Local paths
+3.  Local paths *&para;*
 
 # Importing Data
 
 ## Importing data using `readr` or `readxl`
 
+::: nonincremental
 -   Importing data from Excel spreadsheets is easy with `read_xlsx()` in the package `readxl::`
 
 -   Importing data from csv or text files are easy with `read_…` functions in `readr::`
@@ -39,10 +40,13 @@ execute:
         | `read_csv2`  | semicolon                  | .csv               |
         | `read_tsv`   | tab                        | .tsv               |
         | `read_delim` | any; must define delimiter | .txt               |
+:::
 
 ## Cleaning Variable Names
 
--   `janitor::clean_names` will automatically "clean" the names of a dataset to make them more usable:
+::: callout-tip
+`janitor::clean_names` will automatically "clean" the names of a dataset to make them more usable!
+:::
 
 ```{r echo=T}
 eruptions <- readxl::read_xlsx("../../data/holocene_eruptions.xlsx")
@@ -54,12 +58,14 @@ names(eruptions)
 
 ## Cleaning Variable Names
 
+::: nonincremental
 -   Usually, you will want to rename variables even if they've been cleaned with `janitor::`.
 
 -   You do this with the function `rename()` in the `dplyr` package:
+:::
 
 ```{r eval=F}
-new_df <- rename(old_df,
+new_df <- dplyr::rename(old_df,
                  new_name1 = old_name1,
                  new_name2 = old_name2,
                  new_name3 = old_name3)
@@ -152,7 +158,7 @@ PC users, please remember to use backslashes instead of slashes!
 
     1.  Open your .Rproj
 
-    2.  Open files from that .Rproj
+    2.  Open files from that .Rproj *&para;*
 
 ![](images/Screenshot%202023-06-05%20at%207.12.12%20PM.png){fig-align="center"}
 
@@ -170,7 +176,7 @@ PC users, please remember to use backslashes instead of slashes!
 
     -   `../` = go one directory "up"
 
--   That project file (or analysis file that your scripts are in) will be your *working directory*
+-   That project file (or analysis file that your scripts are in) will be your *working directory* *&para;*
 
 ```{r}
 localFilePath = "scripts/data_cleaning.R"
@@ -181,7 +187,7 @@ absoluteFilePath = "/Users/brennanwork/Library/CloudStorage/GoogleDrive-bterhune
 
 -   Your *working directory* is where you run your scripts "from".
 
--   You can temporarily change your working directory with `setwd()`
+-   You can temporarily change your working directory with `setwd()` *&para;*
 
 ```{r warning=F}
 getwd() # check your current working directory
@@ -199,7 +205,7 @@ getwd() # check it again
 
         -   if you opened a new session of R or opened a .R file directly, then **it is your home folder** :(
 
-    -   If you run the code in a script by using [`source()`]{.underline}, then **it is that script's folder**
+    -   If you run the code in a script by using [`source()`]{.underline}, then **it is that script's folder** *&para;*
 
 ::: {.callout-tip appearance="minimal"}
 If you are just starting out with R, just save your .Rproj and all .R scripts to one folder. That folder will always be your working directory if you open R via your .Rproj :)
@@ -211,6 +217,7 @@ Don't worry about using `source()` at this point!
 
 ::: columns
 ::: {.column width="50%"}
+::: nonincremental
 -   project_folder
     -   data
 
@@ -221,6 +228,7 @@ Don't worry about using `source()` at this point!
         -   project_analysis.R
 
         -   project.Rproj
+:::
 
 In the script `project_analysis.R`, opened in `project.Rproj`, how would you open `data.xlsx`?
 :::
@@ -240,6 +248,7 @@ The working directory would be `project_folder/analysis`, so you would go *up* o
 
 ::: columns
 ::: {.column width="50%"}
+::: nonincremental
 -   project_folder
     -   project.Rproj
 
@@ -250,6 +259,7 @@ The working directory would be `project_folder/analysis`, so you would go *up* o
     -   analysis
 
         -   project_analysis.R
+:::
 
 In the script `project_analysis.R`, opened in `project.Rproj`, how would you open `data.xlsx`?
 :::
@@ -276,7 +286,7 @@ If you source the script, the working directory would be in the `analysis folder
 
 [**In Lab 1:**]{.underline}
 
-1.  Follow the instructions in 12_1\_begin.Rmd!
+1.  Follow the instructions in 12_1_begin.Rmd!
 
 [**In OYOLab:**]{.underline}
 
@@ -286,10 +296,10 @@ If you source the script, the working directory would be in the `analysis folder
 
 3.  Open a new R Script file.
 
-4.  Copy and paste the code for importing your data from 12_1\_begin.Rmd and try running it.
+4.  Copy and paste the code for importing your data from 12_1_begin.Rmd and try running it.
 
     -   Don't forget to fix the filepath and/or move the file with your data to the right place!
 
 5.  Save your R script.
 
-6.  You now have your first (or second, third, or hundredth) R script!
+6.  You now have your first (or second, third, or hundredth) R script! *&para;*

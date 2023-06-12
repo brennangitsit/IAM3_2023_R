@@ -1,8 +1,6 @@
 # A Beginner's Guide to R: <br>Reproducible Data Analysis Using R and the Tidyverse
 ### June 12-17 at [IAM3 2023](), Stockholm, Sweden <br>Instructors: Brennan Terhune-Cotter and Dr. Matt Dye
 
-## Welcome to the IAM3 2023 R Workshop!
-
 ## Objective
 Scientists are increasingly required to make their data preparation, analysis, and statistics **reproducible**. :point_up: Reproducible resarch means anyone should be able to take your dataset and, using your analysis plan, arrive at exactly the same results as you did. That's good science! :raised_hands:
 
