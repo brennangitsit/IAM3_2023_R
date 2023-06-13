@@ -1,0 +1,75 @@
+---
+title: "Data Visualization Lab"
+output: html_notebook
+---
+
+Check out this cheat sheet for using ggplot2:
+https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf
+
+Now this lab will just be you exploring data using ggplot!
+
+Be creative! Try different things. 
+
+We have some datasets you can use:
+- The CPI dataset we used today
+- A dataset of all of the eruptions that have occurred worldwide in the Holocene (the current era lol)
+- A dataset of ASL signs from ASL-LEX
+
+Import the datasets using this chunk, or use the `got_data` df, or your own data.
+
+```{r}
+cpi_tidy <- readRDS("data/cpi_tidy.rds")
+eruptions <- readRDS("data/holocene_eruptions.rds")
+sign_data <- readRDS("data/asl_lex_sign_data.rds")
+```
+
+If you want to start with what we already made in class, here it is!
+
+```{r}
+# Compare the prices of different food items from 2020-2023
+food_items <- c("Meats", "Eggs", "Fruits and vegetables", "Sugar and sweets")
+
+cpi_foods <- cpi_tidy %>% 
+  filter(item %in% food_items)
+
+ggplot(cpi_foods,
+       mapping = aes(
+         x = year,
+         y = increase,
+         group = item
+       )) +
+  geom_line() +
+  geom_point() + 
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase") +
+  theme_classic()
+```
+
+
+```{r}
+# Summarize average annual increase in food prices from 2020-2023
+library(tidyverse)
+ggplot(cpi_tidy,
+       mapping = aes(
+         x = year,
+         y = increase
+         )) +
+  stat_summary(fun = mean, geom = "line") +
+  stat_summary(fun = mean, geom = "point") +
+  labs(title = "Average % Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase",
+       color = "Food Type") +
+  theme_classic()
+```
+
+Or you can try making a ggplot from scratch!
+
+You can add a chunk by pressing `CMD-OPTION-I` or the green `+C` icon at the top. Have fun!
+
+```{r}
+# Make your own plots below!
+
+```
+

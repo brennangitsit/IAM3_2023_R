@@ -1,0 +1,169 @@
+---
+title: 'Lab: RStudio Setup and Data Import'
+author: "Brennan & Matt"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# R Markdown Files ----------------
+
+This is an R Markdown document, which is used to create documents with executable code.
+
+See <http://rmarkdown.rstudio.com> for details on R Markdown.
+
+This is a code chunk, in **gray**. You can run the code in this chunk by pressing the green Play button on the right.
+
+Every R Markdown document has a `setup` chunk in the beginning. The `include = FALSE` parameter tells it not to include this chunk in the final document.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# How to Run Code ----------------
+
+Here, you will start running lines of code. 
+There are a few ways you can run a line of code in an R script
+Running a line of code = telling the computer to execute that line.
+
+1. Highlight the line of code, and press Cmd-Enter (Mac) or Ctrl-Enter (Windows)
+2. Put the cursor anywhere in the line of code, and press Cmd-Enter
+3. Type the code into the Console (the box below), next to the ">" then press Enter. 
+
+In R Markdown files, like this one, there is another way to run code:
+ 4. Press the green play button on the right to run all code within a chunk.
+
+
+# Install the Tidyverse ----------------
+
+Run this line of code. It will install a lot of stuff onto the machine.
+You only have to do this once, ever, on any machine you're on.
+
+RStudio is helpful - it will scan code and show a warning message if it sees any libraries that aren't installed yet. For now, press "Don't Show Again."
+But if you already clicked "install," run this code anyway. 
+
+Note that I included `eval = FALSE` as a parameter in this code chunk.
+This is because I *do not* want this code to be run ("evaluated") when the document is created ("knitted") at the end.
+However, you can still run this code manually.
+
+```{r tidyverse, eval=FALSE}
+install.packages("tidyverse")
+```
+
+Lots of things will happen in the Console below. 
+You will see an output, "Attaching Packages" with 8 green checkmarks and then "Conflicts" with two red X's. 
+That's normal! That means everything in the tidyverse installed correctly, and you are ready to launch.
+When you see `>` that means it's finished and now it's waiting for you to do something. 
+
+
+
+# Load the Tidyverse ----------------
+
+Run this line of code. It loads the core Tidyverse packages.
+
+library() is like checking out cookbook from the library, bringing it home, and saying, "Okay, now I'm ready to start using recipes in this book!"
+
+You need to load packages each time you open R or change R projects. Ignore the conflicts for filter() and lag(), that's normal.
+
+Check out the tidyverse cookbook from the library and bring it home to cook with!
+
+```{r}
+library(tidyverse)
+```
+
+
+
+# Make Sure Tidyverse Is Loaded ----------------
+
+Tidyverse comes with some datasets. To make sure Tidyverse was loaded correctly, let's try looking at a dataset. 
+
+```{r}
+starwars
+```
+
+
+You should see a print-out in the Console with the first 10 rows of Star Wars character data. Fun! 
+
+Want to see it in its own tab in the Source window?
+
+```{r}
+View(starwars)
+```
+
+`View(dataset)` is an example of a command I usually type in the Console, because it is a one-time request I want to make.
+
+In the `starwars` tab, try clicking on different column names to sort the table. 
+
+Press the Filter button and try filtering various columns.
+
+Some columns can't be filtered, like films, vehicles, and starships. 
+
+Try dragging the "starwars" pane out of the entire browser to turn it into a separate window. 
+
+
+
+# Import Game of Thrones Data ----------------
+
+Let's try importing some data! We will import `got_mortality_data.csv` in the `data/` folder.
+This is a dataset containing data about every character in *Game of Thrones* and if/how they die!
+
+Because `got_mortality_data.csv` is in the `data` folder, I have to make sure R is looking in the right place.
+
+```{r import_data}
+got_data <- read_csv("data/got_mortality_data.csv")
+```
+
+You should now see an object in the Environment called got_data. 
+
+Click on it to see the dataset in the Source!
+
+# Import Your Data ----------------
+
+You can also try importing your own data. 
+If you want to import your own data in Posit Cloud, be sure to upload it first.
+
+Edit the code below with your filename, and change the function to match what type of file your data is in.
+
+```{r import_my_data}
+# Edit this code with your file name and the right function
+my_data <- read_csv("my_data_filename.csv")
+```
+
+If you want to clean the variable names in your own dataset, run the following code.
+This uses the function `clean_names` in the package `janitor`.
+
+```{r clean_names}
+my_data <- clean_names(my_data)
+```
+
+
+
+# Getting Help ----------------
+
+You can look up any function by running `?name_of_function_goes_here`
+Let's try `View`. (Remember it?)
+
+```{r}
+?View
+```
+
+
+What does `mean` do?
+
+```{r}
+?mean
+```
+
+
+
+# That’s It! ----------------
+
+We'll do more fun stuff during the workshop.
+
+You can look at the Files pane to see all the other files we're working with here. 
+
+You can also look in the data/ folder to see all the datasets we may be working with. 
+Many of them have been cleaned up for this workshop. 
+You can see how we did that in scripts/data_cleaning.R. 
+
+

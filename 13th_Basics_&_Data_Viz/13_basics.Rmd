@@ -1,0 +1,227 @@
+---
+title: "Day 1: Basics Lab"
+output:
+  html_document:
+    code_folding: show
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+strange_object <- "ghost!"
+cities <- c("Denver", "Spokane", NA, "San Diego", "Stockholm", NA, "Tokyo", "NA", "Harare")
+```
+
+# Assigning Variables ----------------
+
+Let's practice how to assign variables in the environment.
+Run this line.
+
+```{r}
+x <- 5
+```
+
+
+Look at the Environment tab on the right. It should show "x" and "5". 
+That means you've saved a variable, x, that contains the value, 5. 
+
+Try running x by itself. What does the console say? 
+
+```{r}
+x
+```
+
+
+Yep, it just shows you what's the value of x. Let's change that to 10. What happens? 
+
+```{r}
+x <- 10
+x
+```
+
+Let's assign a new variable, y. 
+Maybe this time, try typing it out on the console and pressing Enter.
+
+```{r}
+y <- 20
+y
+```
+
+Add x and y. 
+
+```{r}
+x + y
+```
+
+
+Assign x + y to a new variable.
+
+```{r}
+z <- x + y
+z
+```
+
+
+Let's assign starwars to a variable too.
+
+```{r}
+starwars_data <- starwars
+```
+
+
+In the Environment pane...
+- What do you see? How many observations (rows)? 
+- How many variables (columns)? 
+- What happens when you click on the blue arrow? 
+- What happens when you click on the name "starwars_data" itself? 
+
+
+
+## Types ----------------
+
+Boolean values are either TRUE/T or FALSE/F.
+They are useful for conditional programming and subsetting data.
+
+Logical statements or functions output Boolean values. 
+Here is an example of a logical statement:
+```{r}
+# Test if 3 - 2 = 4.
+3 - 2 == 4
+```
+
+One function that outputs a Boolean value is *is.character()*, which returns TRUE if the object is a character object.
+
+```{r}
+is.character(strange_object)
+```
+
+So strange_object is an object that has the variable type "character".
+You can also test this using the function `typeof`.
+
+```{r}
+typeof(strange_object)
+```
+
+Run the code below to create three new objects, then use the syntax you have learned to determine what variable types they are.
+
+```{r}
+age_in_months <- 74
+age_in_years <- 6.1667
+age_group <- "middle_school"
+
+# Add your code below to query these objects and determine their variable type
+
+
+```
+
+
+# Factors ----------------
+
+One thing you may have realised is that none of these objects are considered by R to be "factors". But we can tell R to do this using as.factor().
+
+```{r}
+as.factor(age_group)
+```
+
+It doesn't really make sense to make this object a factor, though. 
+Factors usually have multiple values, such as primary/elementary/middle/high. 
+Not all factors are ordered (ordinal) like this. Some my be categorical and unordered, like blue/red/green.
+
+The code below creates a variable in the form of a vector of strings. Use R code to make this variable a factor.
+
+```{r}
+school <- c("middle", "elementary", "middle", "middle", "high", "high", "primary", "elementary")
+
+# Enter your code below to make this list/variable a factor and use is.factor to determine if you have succeeded
+
+
+```
+
+You're probably confused because R is telling you that school has a character variable type, and not factor. 
+
+Why is this? 
+
+Think of it in terms of short-term verus long-term memory. 
+If you used the command as.factor(school), then you told R to temporarily treat school as a factor, and in the console it does that. 
+But then R forgets ... no lasting change is made to the variable! 
+
+To put this change into long-term memory we need to tell R to overwrite the variable, as follows:
+
+```{r}
+school <- as.factor(school)
+is.factor(school)
+```
+
+You'll notice this information is now also shown in the Environment pane in the top right.
+
+
+# Working With Data Frames ----------------
+
+Usually, we are working with data frames. Run the code below and note which default variable types are assigned when the CSV file is imported. Change the defaults to make school and homeroom factors.
+
+```{r}
+library(tidyverse)
+school_directory <- read_csv("data/13_1_basics_data.csv")
+View(school_directory)
+
+# Enter your code below
+
+```
+
+
+## Operators and NA ----------------
+
+How would you make a series of numbers from 4 to 12, named "series"?
+```{r}
+# Enter your code below.
+
+
+```
+
+
+Now write some code to test if "series" is greater than 10. 
+What type of object is the output?
+
+```{r}
+# Enter your code below.
+
+
+```
+
+
+I have a vector of city names called `cities`. How many NA values does it have?
+
+```{r}
+cities
+```
+
+
+Can you write code to test if the values in `cities` equal NA?
+Remember, the operator to test for equality is `==`, NOT `=`.
+If you accidentally erase `cities`, go back and run the first chunk in this document again.
+
+```{r}
+# Enter your code below.
+
+
+```
+
+
+If you tried to write `cities == NA`, why didn't that work?
+A special function for testing for NA values is `is.NA()`.
+
+Try `is.NA()` with `cities`.
+```{r}
+# Enter your code below.
+
+
+```
+
+Now try writing code to test if values in `cities` are *not* NA.
+Hint: use the operator `!` before the function `is.na()`.
+
+```{r}
+
+```
+
+
+Your final task is to go back and annotate your code so that you (later) or someone else can understand what you were trying to do!

@@ -1,0 +1,105 @@
+---
+title: "Day 2 Answer Sheet"
+output:
+  html_document:
+    code_folding: show
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+strange_object <- "ghost!"
+```
+
+## Booleans / Logicals
+
+```{r}
+# Test if 3 - 2 = 4.
+3 - 2 == 4
+```
+
+
+```{r}
+# Test if strange_object is a character object.
+is.character(strange_object) == TRUE
+```
+
+
+```{r}
+age_in_months <- 74
+age_in_years <- 6.1667
+age_group <- "middle_school"
+
+# Add your code below to query these objects and determine their variable type
+typeof(age_in_months)
+typeof(age_in_years)
+typeof(age_group)
+```
+
+
+```{r}
+school <- c("middle", "elementary", "middle", "middle", "high", "high", "primary", "elementary")
+
+# Enter your code below to make this list/variable a factor and use is.factor to determine if you have succeeded
+
+
+```
+
+
+```{r}
+library(tidyverse)
+rm(list = ls())
+school_directory <- read_csv("12_basics_data.csv")
+
+# Enter your code below
+
+school_directory$school <- as_factor(school_directory$school)
+
+school_directory %>%
+  mutate('home room' = as_factor('home room'))
+
+```
+
+## Operators and NA ----------------
+
+How would you make a series of numbers from 4 to 12, named "series"?
+```{r}
+# Enter your code below.
+series <- 4:12
+```
+
+Now write some code to test if "series" is greater than 10. 
+What type of object is the output?
+
+```{r}
+# Enter your code below.
+series > 10
+```
+
+I have a vector of city names called `cities`. How many NA values does it have?
+
+```{r}
+cities
+```
+
+Can you write code to test if the values in `cities` equal NA?
+Remember, the operator to test for equality is `==`, NOT `=`.
+```{r}
+# Enter your code below.
+cities == NA # this won't work :)
+```
+
+If you tried to write `cities == NA`, why didn't that work?
+A special function for testing for NA values is `is.NA()`.
+
+Try `is.NA()` with `cities`.
+```{r}
+# Enter your code below.
+is.na(cities)
+```
+
+Now try writing code to test if values in `cities` are *not* NA.
+
+```{r}
+!is.na(cities)
+```
+
