@@ -1,0 +1,455 @@
+---
+title: "Day 3, Part 1: <br>Manipulating Data using Tidyverse"
+authors: Brennan Terhune-Cotter and Matt Dye
+format: 
+  revealjs:
+    smaller: false
+    theme: [simple, custom.scss]
+    footer: "[https://github.com/brennangitsit/2023_IAM3_R](https://github.com/brennangitsit/2023_IAM3_R)"
+editor: visual
+global_packages:
+  - dplyr
+  - tidyverse
+execute:
+  echo: true
+---
+
+## Agenda
+
+1.  Pseudocode!
+2.  Welcome to the Tidyverse!
+3.  The pipe
+4.  Main tidyverse functions:
+    1.  Arrange and filter rows
+    2.  Select and mutate columns
+5.  Joining dataframes
+
+# Pseudocode
+
+-   What do you do if you're not sure how to write something in code?
+
+-   You write *pseudocode* first, and gradually change it into code.
+
+-   [Very]{.underline} helpful for thinking about how to convert something from your language into the language of computers!
+
+## Writing Pseudocode
+
+::: columns
+::: {.column width="50%" style="text-align: center"}
+**Write down your goal in steps**
+
+```{r eval=F}
+With a dataframe called 'people' 
+that has names and ages of people in my study,
+I need to calculate the age of people older than 20
+```
+
+**Write pseudocode**
+
+```{r eval=F}
+For data frame 'people',
+Find rows where 'age' is greater than 20,
+From these rows, calculate the mean of 'age'
+```
+:::
+
+::: {.column width="50%" style="text-align: center"}
+**Slowly turn pseudocode into code...**
+
+```{r eval=F}
+With data frame 'people',
+Use filter() to select rows where 'age' > 20,
+Use summarise() with mean() to 
+calculate mean 'age' of these rows.
+```
+
+**Until you have code!**
+
+```{r eval=F}
+library(dplyr)
+
+people %>%
+  filter(age > 20) %>%
+  summarise(mean_age = mean(age))
+```
+:::
+:::
+
+# Welcome to the Tidyverse!
+
+## What is the Tidyverse?
+
+-   A *package* is a themed collection of functions and datasets for doing something.
+
+-   Tidyverse is a *package of packages*.
+
+![](images/tidyverse.png){fig-align="center"}
+
+# The Pipe
+
+::: columns
+::: column
+![](images/MagrittePipe.jpg){fig-align="center" width="466"}
+:::
+
+::: column
+![](images/banksypipe.png){fig-align="center" width="406"}
+:::
+:::
+
+## The Pipe
+
+-   In the `magrittr` package, which is part of `tidyverse`
+
+-   The greatest invention since sliced bread
+
+-   The **pipe** ( %\>% \| ctrl shift M ) allows you to express a sequence of multiple operations clearly.
+
+-   Using the pipe is like writing "For object x, do this, ***then*** do this".
+
+::: columns
+::: {.column width="50%" style="text-align: center"}
+[**without the pipe:**]{.underline}
+
+get a box
+
+see this box? color it blue
+
+see this blue box? make it bigger
+
+see this big blue box? open it
+
+see this big blue open box? throw it away
+:::
+
+::: {.column width="50%" style="text-align: center"}
+[**with the pipe:**]{.underline}
+
+get a box
+
+then color it blue
+
+then make it bigger
+
+then open it
+
+then throw it away
+:::
+:::
+
+## The Pipe
+
+"Assign 2 to x, **and then** add 3, **and then** subtract 4, **and then** print x":
+
+::: columns
+::: column
+```{r}
+library(magrittr) # has pipe
+x <- 2
+x <- add(x,3)
+x <- subtract(x,4)
+print(x)
+```
+:::
+
+::: column
+```{r}
+library(magrittr) # has pipe
+x <- 2 %>% 
+  add(3) %>% 
+  subtract(4) %>% 
+  print()
+```
+:::
+:::
+
+-   The pipe **passes** the object into the first argument of the next function
+
+    -   The first argument becomes "invisible" to you.
+
+-   This is very useful for data manipulation using tidyverse, because the first argument is almost always the df you are working on.
+
+## The Pipe: when NOT to use it
+
+-   But pipes aren't always the best way to go about things. For example, when doing arithmetic operations, this is simpler:
+
+```{r}
+x <- print(2 + 3 - 4)
+```
+
+-   You also don't want to use pipes if:
+
+    -   You want to look at "intermediate" objects in between steps (assign them new names!)
+
+    -   You use functions that don't accept your dataframe as the first argument.
+
+# Main Tidyverse Functions
+
+-   **group_by()** and **summarise()** data
+
+-   **arrange()** and **filter()** rows
+
+-   **select()** and **mutate()** columns
+
+## eruptions {.smaller}
+
+::: {style="text-align: center"}
+To explain the main Tidyverse functions, we will be using the `eruptions` dataset:
+
+```{r, echo=F}
+eruptions <- readRDS("../../data/holocene_eruptions.rds")
+knitr::kable(eruptions %>% head(5))
+```
+:::
+
+## group_by() and summarise()
+
+-   We will learn about these functions on the last day!
+
+-   You can get the mean, median, standard deviation, min, max, count, etc.
+
+-   You can also calculate your own summary statistics
+
+*What summary statistic does this code calculate?*
+
+```{r eval=F}
+eruptions %>% 
+  group_by(subregion) %>% 
+  summarise(mean_year_erupted = mean(year, na.rm=T))
+```
+
+# Filtering Rows
+
+::: columns
+::: {.column width="50%"}
+```{r}
+?dplyr::arrange
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+?dplyr::filter
+```
+:::
+:::
+
+## arrange()
+
+-   Orders rows by a variable
+
+-   Often used with summarise() to make tables more presentable
+
+```{r}
+library(tidyverse)
+eruptions %>% 
+  group_by(region) %>% 
+  summarise(mean_year = mean(year, na.rm=T),
+            stdev_year = sd(year, na.rm=T)) %>% 
+  arrange(mean_year)
+```
+
+## filter()
+
+-   Include or exclude cases based on values
+
+-   You do this by writing **logical statements** in filter()
+
+```{r echo=F}
+library(dplyr)
+library(knitr)
+
+people <- data.frame(
+  name = c("Alice", "Spew", "Charlemagne", "Kay", "Mackenzie", "Spirulina", "Jason"),
+  age = c(25, 16, 42, 18, 3, 16, 20),
+  humor = c("Bad", "Good", "Good", "Bad", "Terrible", "Too Good", "Good")
+)
+```
+
+::: columns
+::: {.column width="50%"}
+```{r}
+kable(people)
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+# I only want my besties to be adults with a 
+# good (but not too good) sense of humor
+besties <- people %>%
+  filter(age > 18,
+         humor == "Good")
+kable(besties)
+```
+:::
+:::
+
+## 
+
+::: {.callout-tip appearance="simple"}
+-   Open 14_manipulate.Rmd
+
+-   Read **Arranging and Filtering Rows**
+:::
+
+# Manipulating Columns
+
+::: columns
+::: {.column width="50%"}
+```{r}
+?dplyr::select
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+?dplyr::mutate
+```
+:::
+:::
+
+## select()
+
+-   Include, exclude, and rearrange columns
+
+-   Very important for reducing your cognitive load :)
+
+```{r}
+eruptions %>% 
+  select(volcano_name, year, region, subregion) %>% 
+  select(-subregion) %>% 
+  head(8) %>% 
+  knitr::kable()
+```
+
+## mutate()
+
+-   Often, the raw data isn't analyzable in its current form!
+-   You will need to transform columns using `mutate()`
+-   `mutate()` creates new columns from existing columns, **or** changes existing columns
+    -   **very, very useful for manipulating your data!**
+
+## mutate()
+
+-   Uses similar syntax as summarise(): `name = function`
+
+```{r, eval=F}
+dataset %>% 
+  mutate(minutes = seconds / 60,
+         hours = minutes / 60,
+         days = hours / 24)
+```
+
+-   You can use this to replace columns, not just add them:
+
+```{r, eval=F}
+# convert morning time to afternoon time
+dataset %>% 
+  mutate(hours = hours+12)
+```
+
+## Using mutate() to change variable types
+
+-   `mutate()` will be used by you for almost *everything*
+
+    -   For example - changing variable types:
+
+```{r}
+# change a char column in a data frame to a factor column
+people_factored <- people %>% 
+  mutate(humor = as.factor(humor))
+```
+
+The dataset will look the same, but there is an important difference:
+
+::: columns
+::: {.column width="50%"}
+```{r}
+people
+class(people$humor)
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+people_factored
+class(people_factored$humor)
+```
+:::
+:::
+
+-   Open 14_manipulate.Rmd
+
+-   Read **Arranging and Filtering Rows**
+
+## 
+
+::: {.callout-tip appearance="simple"}
+-   Open 14_manipulate.Rmd
+
+-   Read **Selecting and Mutating Columns**
+:::
+
+# Joining Data Frames
+
+## When we have multiple data frames...
+
+-   Very often, we will have multiple data frames that reflect different data sources.
+
+-   For example:
+
+::: smaller
+1.  A data frame with testing scores
+2.  A data frame with language background information
+3.  A data frame with demographic information
+:::
+
+-   Ideally, it is very easy to combine these data frames!
+
+    -   You need a column or set of columns that reflects **unique values** for each subject. This is your `key`.
+
+        -   Usually your `key` is your subject ID column!
+
+    -   Your `key` must have all unique values within a df. There cannot be two rows in a df with the same key!
+
+## Combining data frames using dplyr
+
+```{r}
+?dplyr::`mutate-joins`
+```
+
+-   This family of joins takes two data frames, `x` and `y`, and matches them by a `key`:
+
+    -   `dplyr::inner_join()` removes all rows that don't have matching values in **both** dfs
+    -   `dplyr::left_join()` removes rows that aren't in **x** (most common)
+    -   `dplyr::right_join()` removes rows that aren't in **y**
+    -   `dplyr::full_join()` does not remove any rows
+
+## Choosing your `key`
+
+```{r, eval = F}
+combined_df <- left_join(df1,
+                         df2,
+                         by = "subj_id")
+```
+
+-   This code adds rows in df2 that have a matching **subj_id** to df1.
+
+-   What if you need to match by multiple variables?
+
+    -   For example, what if each subject has two testing visits? No problem!
+
+```{r, eval = F}
+combined_df <- left_join(df1,
+                         df2,
+                         by = c("subj_id","num_visit"))
+```
+
+# IF HAVE TIME...
+
+::: {.callout-tip appearance="simple"}
+-   Open 14_manipulate.Rmd
+
+-   Read **Recoding Variables**
+:::

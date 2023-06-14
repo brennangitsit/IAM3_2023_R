@@ -1,0 +1,122 @@
+---
+title: "Manipulating Data"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+Let's import the dataset for `eruptions`:
+
+```{r}
+eruptions <- readRDS("data/holocene_eruptions.rds")
+```
+
+## Arranging and Filtering Rows ----------
+
+Let's view the `eruptions` dataset.
+
+```{r}
+View(eruptions)
+```
+
+
+We can see it's arranged by volcano number. What if you wanted to arrange it by year?
+Assign this to a new object called `eruptions_chronological`
+
+```{r}
+# Arrange eruptions by year in a 
+# Write your code below
+
+
+```
+
+
+Now maybe you want to only see eruptions in a specific country.
+Choose a country and select for that country only. Assign this to `eruptions_chronological_yourcountry`.
+
+```{r}
+# Look at chronological eruptions 
+# Write your code below
+```
+
+
+Can you *start* with the `eruptions` dataset and try to use arrange() and filter() like above, but using the pipe so that you don't have to assign new objects every time?
+I've started your code block below. Try to finish this code to get the same dataset as `eruptions_chronological_yourcountry`.
+No need to assign this to a new object.
+
+```{r}
+# Arrange eruptions in one country by year
+
+eruptions %>% # Write your code below
+  
+
+```
+
+## Selecting and Mutating Columns ----------
+
+The `eruptions` dataset has too many columns/variables! It's annoying to scroll through columns to see what variables you're interested in.
+Let's make a dataset `eruptions_smaller` that includes only the following columns:
+  - volcano_name
+  - year
+  - country
+  - elevation
+
+Feel free to add any other variables you're interested in!
+  
+```{r}
+# Select columns of interest in `eruptions`.
+# Write your code below
+
+
+```
+
+
+Great! However, most of us are Americans! We don't understand the concept of "meters". 
+Let's create a new variable for elevation in feet, named `elevation_ft`.
+Assign this to a new object `eruptions_smaller_americanized`.
+FYI: the conversion rate for meters to feet is 1 meter = 3.28 feet.
+
+```{r}
+# Help Americans understand elevation data in `eruptions`.
+# Write your code below
+
+
+
+```
+
+
+
+## Recoding Variables ----------
+
+You can also mutate a new column where you *selectively* change values to other values, using `case_match()` in `mutate()`.
+This is perfect for recoding variables!
+
+For example, maybe you want to recode "female" to 0, "male" to 1, "nonbinary" to 2, and so on.
+
+Or for `eruptions`, you want to recode `activity_evidence` to a new variable: `seen`, meaning did people see the eruption?
+
+`activity_evidence` has three values: "Eruption Dated", "Eruption Credible", "Eruption Observed". 
+However, the first two both mean people did not SEE the eruption, so in our new variable they would both be `no`.
+
+Here is how you would do that using `case_match`. I am adding this to the *original* dataset, not assigning it a new object.
+This means I am rewriting the original dataset so I better be sure it works!
+
+```{r}
+# Create a new variable for underwater vs. above ground eruptions
+eruptions <- eruptions %>% 
+  mutate(seen = case_match(
+    activity_evidence,
+    "Eruption Dated" ~ "no",
+    "Eruption Credible" ~ "no",
+    "Eruption Observed" ~ "yes"
+  )
+)
+```
+
+

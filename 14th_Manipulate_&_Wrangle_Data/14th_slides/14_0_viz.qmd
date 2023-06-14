@@ -1,0 +1,573 @@
+---
+title: "Day 3, Part 0: <br>Data Visualization"
+authors: Brennan Terhune-Cotter and Matt Dye
+format: 
+  revealjs:
+    smaller: false
+    theme: [simple, custom.scss]
+    footer: "[https://github.com/brennangitsit/2023_IAM3_R](https://github.com/brennangitsit/2023_IAM3_R)"
+editor: visual
+global_packages:
+  - dplyr
+  - tidyverse
+  - ggplot2
+execute:
+  echo: true
+---
+
+## Agenda
+
+1.  Aesthetic mappings in ggplot2
+2.  Building a simple ggplot
+3.  Comparing groups in a ggplot
+4.  Plotting data with summary statistics
+
+## Aesthetic Mappings {.smaller}
+
+-   ggplot uses aesthetic mappings (aes) to connect data with visual features in the plot
+
+```{r}
+?ggplot2::aes
+```
+
+::: fragment
+-   ggplot requires you to assign variable names to aes()
+
+```{r, eval=F}
+ggplot(aes(x = variable1, y = variable2, color = variable3)
+```
+:::
+
+::: fragment
+-   Let's brainstorm some aesthetic mappings with some fake data:
+
+```{r echo=F}
+people <- data.frame(
+  name = c("Alice", "Spew", "Charlemagne", "Kay", "Mackenzie", "Spirulina", "Jason"),
+  region = c("New England", "West Coast", "West Coast", "South", "New England", "Midwest", "Midwest"),
+  age = c(25, 16, 42, 18, 3, 16, 20),
+  humor_score = c(7, 14, 16, 9, 1, 20, 11),
+  humor_category = c("Bad", "Good", "Good", "Bad", "Terrible", "Too Good", "Good")
+)
+knitr::kable(people)
+```
+:::
+
+## Filling out aes()
+
+::: fragment
+Using the `cpi` dataset, let's visualize the annual increase in prices of ALL FOOD from 2020-2023 as a line graph. What would go in aes()?
+
+::: {style="font-size: 0.60em"}
+```{r, echo=F}
+library(tidyverse)
+cpi <- readRDS("../../data/cpi.rds")
+cpi_tidy <- readRDS("../../data/cpi_tidy.rds")
+cpi %>% 
+  filter(item == "All food") %>% 
+  knitr::kable()
+```
+:::
+:::
+
+::: incremental
+-   The way the dataframe is set up currently, there is no way to assign variables to aes()
+-   We need to tidy our dataframe (tidying is covered later in the workshop)
+:::
+
+## Wide vs. Long Data
+
+::: columns
+::: {.column width="50%" style="font-size: 0.45em"}
+```{r, echo=FALSE}
+library(ggplot2)
+cpi %>% 
+  filter(item == "All food") %>% 
+  knitr::kable()
+```
+:::
+
+::: {.column width="50%" style="font-size: 0.45em"}
+```{r, echo=FALSE}
+cpi_tidy %>% 
+  filter(item == "All food") %>% 
+  knitr::kable()
+```
+:::
+:::
+
+[**In long/tidy data:**](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
+
+1.  Every column is a variable.
+2.  Every row is an observation.
+3.  Every cell is a single value.
+
+```{r eval=F}
+ggplot(aes(x = year, y = increase))
+```
+
+## Building a ggplot
+
+::: columns
+::: {.column width="50%"}
+```{r, eval=F}
+cpi_allfood <- cpi_tidy %>% 
+  filter(item == "All food")
+
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       ))
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+::: {style="font-size: .7em"}
+```{r, echo=F, fig.width=5, fig.height=3.5}
+cpi_allfood <- cpi_tidy %>% 
+  filter(item == "All food")
+
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       ))
+```
+:::
+:::
+:::
+:::
+
+## Building a ggplot
+
+::: columns
+::: {.column width="50%"}
+```{r, eval=F}
+cpi_allfood <- cpi_tidy %>% 
+  filter(item == "All food")
+
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line()
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+::: {style="font-size: .7em"}
+```{r, echo=F, fig.width=5, fig.height=3.5, output=T}
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line()
+```
+:::
+
+::: {style="color: red; font-size: .7em"}
+\`geom_line()\`: Each group consists of only one observation. Do you need to adjust the group aesthetic?
+:::
+:::
+:::
+:::
+
+## A Slight Tangent: Troubleshooting {style="text-align: center"}
+
+![](images/ss_troubleshooting.png)
+
+Two possible solutions here (and both work!)
+
+## Building a ggplot
+
+::: columns
+::: {.column width="50%" style="font-size: .8em"}
+```{r, eval=F}
+cpi_tidy <- cpi_tidy %>% 
+  mutate(year = as.numeric(year),
+         increase = as.numeric(increase))
+
+cpi_allfood <- cpi_tidy %>% 
+  filter(item == "All food")
+
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line()
+```
+
+To fix the issue, I changed *year* and *increase* from char to numeric.
+:::
+
+::: {.column width="50%" style="font-size: .7em"}
+::: fragment
+```{r, echo=F, fig.width=5, fig.height=3.5, output=T}
+cpi_tidy <- cpi_tidy %>% 
+  mutate(year = as.numeric(year),
+         increase = as.numeric(increase))
+
+cpi_allfood <- cpi_tidy %>% 
+  filter(item == "All food")
+
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line()
+```
+:::
+
+::: fragment
+Let's add points to each datapoint.
+:::
+:::
+:::
+
+## Building a ggplot
+
+::: columns
+::: {.column width="50%"}
+```{r, eval=F}
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line() +
+  geom_point()
+```
+:::
+
+::: {.column width="50%" style="font-size: .7em"}
+::: fragment
+```{r, echo=F, fig.width=5, fig.height=3.5, output=T}
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line() +
+  geom_point()
+```
+:::
+
+::: fragment
+Let's add appropriate axis labels and a title.
+:::
+:::
+:::
+
+## Building a ggplot
+
+::: columns
+::: {.column width="50%"}
+```{r, eval=F}
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line() +
+  geom_point() + 
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase")
+```
+:::
+
+::: {.column width="50%" style="font-size: .7em"}
+::: fragment
+```{r, echo=F, fig.width=5, fig.height=3.5, output=T}
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line() +
+  geom_point() +
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase")
+```
+:::
+
+::: fragment
+We can apply a theme to our plot to make it look better...
+:::
+:::
+:::
+
+## Building a ggplot
+
+::: columns
+::: {.column width="50%"}
+```{r, eval=F}
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line() +
+  geom_point() + 
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase") +
+  theme_light()
+```
+:::
+
+::: {.column width="50%" style="font-size: .7em"}
+::: fragment
+```{r, echo=F, fig.width=5, fig.height=3.5, output=T}
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line() +
+  geom_point() +
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase") +
+  theme_light()
+```
+:::
+
+::: fragment
+There are various [themes](https://ggplot2.tidyverse.org/reference/ggtheme.html) which can be edited using **theme()**.
+:::
+:::
+:::
+
+## Building a ggplot
+
+::: columns
+::: {.column width="50%"}
+```{r, eval=F}
+#| code-line-numbers: "11"
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line() +
+  geom_point() + 
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase") +
+  theme_classic()
+```
+:::
+
+::: {.column width="50%" style="font-size: .7em"}
+```{r, echo=F, fig.width=5, fig.height=3.5, output=T}
+ggplot(cpi_allfood,
+       mapping = aes(
+         x = year,
+         y = increase
+       )) +
+  geom_line() +
+  geom_point() +
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase") +
+  theme_classic()
+```
+
+There are various [themes](https://ggplot2.tidyverse.org/reference/ggtheme.html) which can be edited using **theme()**.
+:::
+:::
+
+::: fragment
+What if we wanted to compare different types of foods?
+:::
+
+## Comparing groups in a ggplot
+
+::: columns
+::: {.column width="50%" style="font-size: .8em"}
+We make a dataframe with the types of foods we're interested in.
+
+```{r, eval=FALSE}
+food_items <- c("Meats", "Eggs", 
+                "Fruits and vegetables", 
+                "Sugar and sweets")
+
+cpi_foods <- cpi_tidy %>% 
+  filter(item %in% food_items)
+```
+:::
+
+::: {.column width="50%" style="font-size: 0.45em"}
+```{r, echo=FALSE}
+library(tidyverse)
+
+food_items <- c("Meats", "Eggs", "Fruits and vegetables", "Sugar and sweets")
+
+cpi_foods <- cpi_tidy %>% 
+  filter(item %in% food_items)
+
+knitr::kable(cpi_foods)
+```
+:::
+:::
+
+## Comparing groups in a ggplot
+
+::: columns
+::: {.column width="50%"}
+```{r, eval=F}
+#| code-line-numbers: "1,5"
+ggplot(cpi_foods,
+       mapping = aes(
+         x = year,
+         y = increase,
+         group = item
+       )) +
+  geom_line() +
+  geom_point() + 
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase") +
+  theme_classic()
+```
+
+Then we add a new aesthetic mapping for *group*.
+:::
+
+::: {.column width="50%" style="font-size: .7em"}
+::: fragment
+```{r, echo=F, fig.width=5, fig.height=3.5, output=T}
+ggplot(cpi_foods,
+       mapping = aes(
+         x = year,
+         y = increase,
+         group = item
+       )) +
+  geom_line() +
+  geom_point() + 
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase") +
+  theme_classic()
+```
+:::
+
+::: fragment
+We need to add line colors and a legend to identify groups.
+:::
+:::
+:::
+
+## Comparing groups in a ggplot
+
+::: columns
+::: {.column width="50%"}
+```{r, eval=F}
+#| code-line-numbers: "5,12"
+ggplot(cpi_foods,
+       mapping = aes(
+         x = year,
+         y = increase,
+         color = item
+       )) +
+  geom_line() +
+  geom_point() + 
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase",
+       color = "Food Type") +
+  theme_classic()
+```
+:::
+
+::: {.column width="50%" style="font-size: .7em"}
+::: fragment
+```{r, echo=F, fig.width=5, fig.height=3.5, output=T}
+ggplot(cpi_foods,
+       mapping = aes(
+         x = year,
+         y = increase,
+         color = item
+       )) +
+  geom_line() +
+  geom_point() + 
+  labs(title = "% Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase",
+       color = "Food Type") +
+  theme_classic()
+```
+:::
+
+::: fragment
+With ggplot, we can keep adding things as needed.
+:::
+:::
+:::
+
+## Plotting summary statistics
+
+::: incremental
+-   We usually plot **summary statistics** like the *mean*.
+-   The simple ggplots above only plotted *identity*.
+-   You can make ggplots that summarize data...
+:::
+
+## Plotting summary statistics
+
+::: columns
+::: {.column width="50%"}
+```{r, eval=F}
+#| code-line-numbers: "1,6,7,8,9,10"
+ggplot(cpi_tidy,
+       mapping = aes(
+         x = year,
+         y = increase
+         )) +
+  stat_summary(fun = mean, 
+               geom = "line") +
+    stat_summary(fun = mean, 
+                 geom = "point") +
+  labs(title = "Average % Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase",
+       color = "Food Type") +
+  theme_classic()
+```
+:::
+
+::: {.column width="50%" style="font-size: .7em"}
+::: fragment
+```{r, echo=F, fig.width=5, fig.height=3.5, output=T}
+library(tidyverse)
+ggplot(cpi_tidy,
+       mapping = aes(
+         x = year,
+         y = increase
+         )) +
+  stat_summary(fun = mean, geom = "line") +
+    stat_summary(fun = mean, geom = "point") +
+  labs(title = "Average % Increase in Food Prices 2020-2023",
+       x = "Year",
+       y = "% Increase",
+       color = "Food Type") +
+  theme_classic()
+```
+:::
+:::
+:::
+
+::: incremental
+-   However, most of the time it's better to create a **summary dataset** to use for plotting.
+-   This allows us to keep an eye on the data.
+-   Summarizing data and plotting it will be covered on the last day :)
+:::
