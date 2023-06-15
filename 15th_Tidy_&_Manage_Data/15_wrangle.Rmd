@@ -1,0 +1,260 @@
+---
+title: "Day 4: Tidying Lab"
+output:
+  html_document:
+    code_folding: show
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+# Importing Data ---------
+
+Next, we use the read_csv() function to pull in data from our survey. We tell R to put that data in a data frame called climate_data.
+
+Always be careful with dates. Looking at our CSV file, we can see that it is in M/DD/YY HH:MM format. In R terminology, this is *%m%d%y %H%M*. It is best to read dates into a data frame in ISO8601 format, which is *%Y-%m-%d %H:%M:%S*. In tidyverse this is referred to as "datetime" format which has the data type \<dttm\>. We use the col_types argument in read_csv to do this.
+
+```{r import_data}
+climate_data <- read_csv("~/Documents/GitHub/2023_IAM3_R/data/climate-survey-data.csv",
+                         na = "",
+                         col_types = cols(StartDate = col_datetime("%m/%d/%y %H:%M"),
+                                          EndDate = col_datetime("%m/%d/%y %H:%M"),
+                                          RecordedDate = col_datetime("%m/%d/%y %H:%M"))
+                         )
+```
+
+# Wrangling Data ----------
+
+Our next step is to rename the variables so that they conform to good R practice. We put the name we **want** in the **left side** of the expression.
+```{r rename_variables}
+climate_data <- climate_data %>%
+  rename(
+    start_date = StartDate,
+    end_date = EndDate,
+    progress = Progress,
+    duration = `Duration (in seconds)`,
+    finished = Finished,
+    record_date = RecordedDate,
+    gender = Q2,
+    hearing_status = Q3,
+    academic_rank = Q4,
+    academic_rank_other = Q4_3_TEXT,
+    funding_agencies = Q7,
+    scholarship_optimism = Q9,
+    top_five_scholarship = Q10_0_GROUP,
+    rank_peer = Q10_0_1_RANK,
+    rank_chair = Q10_0_4_RANK,
+    rank_apply_grants = Q10_0_5_RANK,
+    rank_maintain_grants = Q10_0_6_RANK,
+    rank_travel = Q10_0_7_RANK,
+    rank_course_release = Q10_0_8_RANK,
+    rank_space = Q10_0_9_RANK,
+    rank_library = Q10_0_10_RANK,
+    rank_tech_support = Q10_0_11_RANK,
+    rank_internal_funding = Q10_0_13_RANK,
+    rank_ug_assistants = Q10_0_14_RANK,
+    rank_grad_assistants = Q10_0_15_RANK,
+    rank_collabs = Q10_0_16_RANK
+  )
+```
+
+
+We can also remove variables from the data frame that we do not wish to include. This does not change the .csv file that we read our data from ... it only affects the data frame in our R session!
+
+```{r remove_variables}
+climate_data <- climate_data %>%
+  select(
+    -Q7_12_TEXT
+  )
+```
+
+
+Our next step is to make sure that our variables are of the correct type. If you run the following command, it will tell you the <type> associated with each variable.
+
+```{r glimpse_data}
+glimpse(climate_data)
+```
+
+
+To change a characteristic of a variable, we can use the mutate() function. If an integer is stored as a double, that's no big deal. But we can save memory bystoring it as an integer. 
+
+Sometimes your variables will be stored as characterstring <chr> when they are really coded different levels of a factor and should be identified as such -- \<fct\>.
+
+```{r type_conversion}
+climate_data <- climate_data %>%
+  mutate(
+    progress = as.integer(progress),
+    duration = as.integer(duration),
+    gender = as.factor(gender),
+    hearing_status = as.factor(hearing_status),
+    academic_rank = as.factor(academic_rank),
+    outreach = as.factor(outreach)
+  )
+```
+
+
+This gets a little tedious, but there is a more efficient way! We start by creating a list - or "vector" - of column names that we want to change to factor type. 
+
+In the command below, we create a vector called factor_columns and tell it which columns to include.
+
+```{r efficient_typeconv}
+factor_columns <- c("service", "admin", "research", "writing", "teaching", "mentoring",
+                    "scholarship_optimism")
+
+climate_data <- climate_data %>%
+  mutate_at(factor_columns, factor)
+```
+
+
+The column "top_five_scholarship" is a tricky one. Respondents were asked to select their top 5 most important factors from a predefined list. the "funding_agencies" gives us the same dilemma. To make sure our data is "tidy", each observation should have its own column. So we can create, for example, a column that represents our observation of whether a respondent indicated 'NSF' was a funding agency that supports their kind of research.
+
+```{r recode_fundingagencies}
+climate_data <- climate_data %>%
+  mutate(nsf = if_else(grepl("NSF", funding_agencies), TRUE, FALSE),
+         nidilrr = if_else(grepl("NIDILRR", funding_agencies), TRUE, FALSE),
+         nih = if_else(grepl("NIH", funding_agencies), TRUE, FALSE),
+         dept_education = if_else(grepl("ED", funding_agencies), TRUE, FALSE),
+         foundation = if_else(grepl("Fndn", funding_agencies), TRUE, FALSE),
+         osers = if_else(grepl("OSERS", funding_agencies), TRUE, FALSE),
+         ies = if_else(grepl("IES", funding_agencies), TRUE, FALSE),
+         other = if_else(grepl("Other", funding_agencies), TRUE, FALSE)
+         )
+```
+
+
+We can do the same for "top_five_scholarship". Note that this column is related to the columns which indicate how different forms of scholarship were ranked. So it is helpful to use a similar naming convention: "rank_peer" <-> "peer". We need to be careful and ensure that the string we are searching for using the grepl command is unique to each possible response.
+
+```{r recode_topfive}
+climate_data <- climate_data %>%
+  mutate(
+    peer = if_else(grepl("peers", top_five_scholarship), TRUE, FALSE),
+    chair = if_else(grepl("chair", top_five_scholarship), TRUE, FALSE),
+    apply_grants = if_else(grepl("applying", top_five_scholarship), TRUE, FALSE),
+    maintain_grants = if_else(grepl("maintaining", top_five_scholarship), TRUE, FALSE),
+    travel = if_else(grepl("travel", top_five_scholarship), TRUE, FALSE),
+    course_release = if_else(grepl("release", top_five_scholarship), TRUE, FALSE),
+    space = if_else(grepl("space", top_five_scholarship), TRUE, FALSE),
+    library = if_else(grepl("Library", top_five_scholarship), TRUE, FALSE),
+    tech_support = if_else(grepl("technical", top_five_scholarship), TRUE, FALSE),
+    internal_funding = if_else(grepl("Intramural", top_five_scholarship), TRUE, FALSE),
+    ug_assistants = if_else(grepl("Undergraduate", top_five_scholarship), TRUE, FALSE),
+    grad_assistants = if_else(grepl("Graduate", top_five_scholarship), TRUE, FALSE),
+    collabs = if_else(grepl("collaborations", top_five_scholarship), TRUE, FALSE)
+  )
+```
+
+
+Now that we've recoded those two variables as new variables, we can drop them from our data frame.
+
+```{r remove_recoded_vars}
+climate_data <- climate_data %>%
+  select(
+    -c(top_five_scholarship, funding_agencies)
+  )
+```
+
+
+We've nearly finished cleaning up our data frame! Looking at some of our factor <fct> columns, I noticed that if I ask R to create tables or figures, it will place values in the order they first appear in the data frame. That wouldn't make sense! 
+
+```{r plot_unordered_factor}
+climate_data %>%
+  drop_na(service) %>% 
+  ggplot(aes(x = service)) +
+    geom_bar(fill = "black")
+```
+
+
+So I'm going to tell R what the ordering is within my factor columns, which have an 'ordinal' level of measurement. Let's start with 'outreach':
+
+```{r reorder_ordinal_vars}
+climate_data <- climate_data %>%
+  mutate(outreach = factor(outreach, levels = c("Far too little", "Slightly too little", "just right", 
+                            "Slightly too much", "Far too much")))
+```
+
+
+It's important to note here that the labels we use must exactly match those in the data frame. If you look carefully, you'll see that "just right" is all lower case. If I had specified "Just right" with initial capitalization, then R would replace all of the instances of "just right" with NA!
+
+Also, this is pretty inefficient, given that the same Likert scale is used for eight variables! We can do the same thing that we did above, by creating a vector with the levels we want to use and then also reusing our 'factor_columns' vector:
+
+```{r efficient_reorder_ordinal_vars}
+
+likert <- c("Far too little", "Slightly too little", "just right", "Slightly too much", "Far too much")
+
+climate_data <- climate_data %>%
+  mutate_at(factor_columns, factor, levels = likert)
+```
+
+
+Now R knows the ordering of my factor column values, from most negative to most positive. I could recode them from 1 through 5, but for now I'll leave them as an ordered categorical variable. Maybe later I will want to perform mathematical operations on them -- but leaving them this way means that I must make an explicit decision later to treat them as values that can be averaged, forcing me to think carefully about how I want to treat this kind of data!! For now, let's see what our column chart looks like after ordering the levels of the factor:
+
+```{r plot_ordered_factor}
+climate_data %>%
+  drop_na(service) %>% 
+  ggplot(aes(x = service)) +
+    geom_bar(fill = "black")
+```
+
+
+Now the level ordering makes sense! I'm a little annoyed by the lack of capitalization for "just right". But we change values within a column, or columns, using the recode function:
+
+```{r recode_columns}
+climate_data <- climate_data %>%
+  mutate(outreach = fct_recode(outreach, "Just right" = "just right"))
+```
+
+
+And we know how to do this more efficiently too!
+
+```{r efficient_recode_columns}
+climate_data <- climate_data %>%
+  mutate_at(factor_columns, fct_recode, "Just right" = "just right")
+```
+
+
+Let's look at my column chart again, adding a line of code to tell R not to drop levels where the number of respondents is zero:
+
+```{r plot_ordered_factor_after_recode}
+climate_data %>%
+  drop_na(service) %>% 
+  ggplot(aes(x = service)) +
+    geom_bar(fill = "black") +
+    scale_x_discrete(drop = FALSE)
+```
+
+
+Last, but not least, I noticed two types of NA response in the gender column! There is an NA in grey font and italicized. That means R will treat this as missing data - the respondent chose not to respond to this question. But there is also an NA in regular font -- sometimes respondents picked the "NA" response option! I am going to recode this last response to make it clear that the respondent made a response, and indicated that the gender question - as asked - was not applicable to them.
+
+```{r standardize_nas}
+climate_data <- climate_data %>%
+  mutate(
+    gender = fct_recode(gender,
+                        "Female" = "F",
+                        "Male" = "M",
+                        "Not applicable to me" = "NA")
+  )
+```
+
+
+Now an optional step. I'm going to save my tidied data in a format that can be read back into R. 
+
+Using this .rds format means that all of the work I have done defining data types and ordering factor levels will be retained. If I saved the data in CSV format, I'd lose all that!
+
+```{r save_as_rds}
+write_rds(climate_data, "~/Documents/GitHub/2023_IAM3_R/data/tidy-climate-data.rds")
+```
+
+
+Wow! Over two hundred lines of code, including blank lines. All to just import and tidy up my data.
+
+But I now have a record of every decision that I made. I can share this script and the CSV with anyone and they can repeat exactly what I did, and understand WHY I did it -- annotations are really important. I can also go back and make different decisions. Importantly, my data is now ready to be analyzed. I put in the hard work now to make my life so much easier later!
+
+I can take a look at my data in R using the View() function, like this:
+
+```{r}
+View(climate_data)
+```
+
+One thing I notice is that four respondents did not complete the survey, with three of those getting at most halfway through. But one of the principles of R is that I never delete any data. WHen I move on to analyzing my data, I can write a script that tells R to ignore these rows when calculating averages or visualizing the data.

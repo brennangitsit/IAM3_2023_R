@@ -1,0 +1,92 @@
+---
+title: 'Day 4: Tidying Data'
+author: "Brennan & Matt"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Loading Data -----------
+
+```{r load}
+climate_data <- readRDS(climate_data, "data/clean_climate_data.rds")
+```
+
+Matt cleaned this data extensively, and thoroughly explained his thought process, in `15_wrangle.rmd`. 
+It might be helpful for you to look at later if you want to see how data wrangling is done from start to end.
+Take a gander, if you dare!
+
+## Looking at climate_data -----------
+
+```{r}
+View(climate_data)
+```
+
+We can see that there is a set of related columns, `outreach` to `mentoring`, which could be plotted together. 
+Those columns reflect how much the respondents felt they did of each activity. 
+
+Maybe we're interested in whether deaf or hearing faculty had different experiences of the activities.
+
+Let's focus on these variables and remove rows with no information about if they were deaf or hearing.
+
+```{r}
+climate_data <- climate_data %>% 
+  select(hearing_status,
+         academic_rank,
+         outreach:mentoring) %>% 
+  filter(!is.na(hearing_status))
+```
+
+If we wanted to plot these activites together, we would need to tidy the data.
+We could put the variable names in a column called `activity`.
+We could put the values in a column called `amount`.
+
+
+## Tidying climate_data -----------
+
+```{r}
+# Tidy the climate data
+climate_tidy <- pivot_longer(
+  data = climate_data,
+  cols = outreach:mentoring,
+  names_to = "activity",
+  values_to = "amount"
+)
+```
+
+Try reading the code above. Note that you don't need "data = ", "cols = ", "names_to = ", or "values_to = ", but they make it clearer for the reader.
+Do you understand what the function does with this dataset?
+
+The data is now tidy and can be visualized!
+
+
+## Visualizing this data -----------
+
+```{r}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+
+# Create a summary table
+summary_table <- climate_tidy %>%
+  group_by(hearing_status, activity, amount) %>%
+  summarise(count = n(), .groups = "drop")
+
+# Create the plot
+ggplot(data = summary_table, mapping = aes(x = activity, y = count, fill = amount)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~hearing_status) +
+  ylab("Count") +
+  xlab("Activity") +
+  labs(fill = "Amount") +
+  theme_minimal() +
+  coord_flip()
+```
+
+Try reading the code above and guessing what each function does.
+
+Or try making your own visualizations from the data, if you don't want to go home!
