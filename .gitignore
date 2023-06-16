@@ -3,6 +3,7 @@
 
 ## Exclude specific folders
 Development/
+others_content
 
 ## Ignore Google Documents (incompatible with git)
 *.gdoc

@@ -13,7 +13,7 @@ library(tidyverse)
 ## Loading Data -----------
 
 ```{r load}
-climate_data <- readRDS(climate_data, "data/clean_climate_data.rds")
+climate_data <- readRDS("../data/clean_climate_data.rds")
 ```
 
 Matt cleaned this data extensively, and thoroughly explained his thought process, in `15_wrangle.rmd`. 

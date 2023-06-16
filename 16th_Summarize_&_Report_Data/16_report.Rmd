@@ -1,0 +1,99 @@
+---
+title: "Summarizing Data"
+output: html_notebook
+---
+
+Start each script by loading in the required libraries.
+
+If the packages containing those libraries need to be installed, then do that using the Console interface. Do not use install_packages() in your script files.
+
+```{r setup}
+library(tidyverse)
+```
+
+We are going to start by reading in the data that we tidied earlier. If you recall, we saved that as a RDS file that preserves all of information about our data such as data types, factor lists, and so on.
+
+```{r}
+climate_data <- read_rds("../../data/tidy-climate-data.rds")
+```
+
+Next, I want to let R know that my analysis should be restricted to respondents who completed the entire survey. I can do that using the filter() function, like so:
+
+```{r}
+climate_data_full <- climate_data %>%
+  filter(progress == 100)
+```
+
+Note that when using the filter() function, we are telling R what rows to allow through the filter and into our new data frame. In this case, we want the filter to allow through rows where the 'progress' column has a value of 100. Important reminder: we use a double equals sign (==). In R, we use a single equals sign (=) to assign a value. R would interpret 'progress = 100' as a request to assign the value to the variable 'progress'. Here is what would happen:
+
+```{r}
+climate_data_full <- climate_data %>%
+  filter(progress = 100)
+```
+
+The error is so common that we actually get an error message that is helpful!!
+
+Let's refamiliarize ourselves with the data. R gives us several options for doing so. The head() function allows us to look at specified number of rows at the top (aka "head") of our data frame. Just speciify the name of the data frame, and how many rows you want to see:
+
+```{r}
+head(climate_data_full, 5)
+```
+And the tails() function does the same from the bottom (aka "tail) of the data frame:
+
+```{r}
+tail(climate_data_full, 5)
+```
+Notice that the header row provides a little extra information about each column, notably the data type (e.g. int, lgl, fctr).
+
+We can also use the glimpse() function:
+
+```{r}
+glimpse(climate_data_full)
+```
+Here the data frame is transposed, with each row of the output providing information about a column in the data frame.
+
+Summarizing Data by Groups
+
+We can start by creating a simple table using the summarise() function:
+
+```{r}
+data_summary <- summarise(climate_data_full,
+          mean_course_release = mean(rank_course_release, na.rm = TRUE),
+          mean_apply_grants = mean(rank_apply_grants, na.rm = TRUE),
+          mean_space = mean(rank_space, na.rm = TRUE))
+data_summary
+```
+Here we see that apply_grants was ranked higher than course_release, which in turn was ranked higher than space. Is this true for both hearing and DHH facutly members? Let's use the group_by() function to find out!
+
+```{r}
+data_grouped <- climate_data_full %>%
+  group_by(hearing_status)
+
+data_summary_grouped <- data_grouped %>%
+  summarise(mean_course_release = mean(rank_course_release, na.rm = TRUE),
+          mean_apply_grants = mean(rank_apply_grants, na.rm = TRUE),
+          mean_space = mean(rank_space, na.rm = TRUE)) %>%
+  ungroup()
+
+data_summary_grouped
+```
+
+Now we can see that the DHH and hearing faculty ranked these three types of support differently. For hearing faculty, the ranking was space > course_release > apply_grants, whereas for DHH faculty the ranking was apply_grants > course_release > space.
+
+This was a three step process:
+
+(1) We grouped our data frame using the group_by() function, creating a new "grouped" data frame called data_grouped.
+(2) We then created a table 'object' called data_summary_grouped using that new data frame.
+(3) Finally we ungrouped the data, so that subsequent commands to R don't use this grouping!
+
+We may be violating a few assumptions, but simplicity's sake we will run a t-test to see if DHH and hearing faculty rank space differently:
+
+```{r}
+library(pander)
+
+data_comparison <- t.test(data = climate_data_full, rank_space ~ hearing_status, na.rm = TRUE)
+
+pander(data_comparison)
+
+```
+We used a package called 'pander' which creates nicer looking output.
